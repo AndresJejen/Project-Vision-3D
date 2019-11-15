@@ -1,0 +1,5 @@
+1. Faltan Clasificador  line 58 objectdetector.hpp (funcion) / line 205 objectdetector.h (parametro) / line 74 objectdetector.h (funcion)
+2. Faltan Cluster  line 150 objectdetector.hpp (funcion) / line 145 objectdetector.h (funcion) / line 221 objectdetector.hpp (funcion)
+3. HeadBasedSubclustering line 212 objectdetector.hpp
+
+Dentro de Person Classifier está
