@@ -1,5 +1,5 @@
-#ifndef OBJECT_DETECTION_APP_H_
-#define OBJECT_DETECTION_APP_H_
+#ifndef APP_GROUND_BASED_PEOPLE_DETECTION_APP_H_
+#define APP_GROUND_BASED_PEOPLE_DETECTION_APP_H_
 
 #include <pcl/people/ground_based_people_detection_app.h> // ACA DEFINICIONES OJO
 
@@ -56,7 +56,7 @@ app::ObjectClassifierApp<PointT>::setIntrinsics (Eigen::Matrix3f intrinsics_matr
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 template <typename PointT> void
-app::ObjectClassifierApp<PointT>::setClassifier (pcl::people::PersonClassifier<pcl::RGB> person_classifier)
+app::ObjectClassifierApp<PointT>::setClassifier (app::PersonClassifier<pcl::RGB> person_classifier)
 {
   person_classifier_ = person_classifier;
   person_classifier_set_flag_ = true;
@@ -148,7 +148,7 @@ app::ObjectClassifierApp<PointT>::filter ()
 
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 template <typename PointT> bool
-app::ObjectClassifierApp<PointT>::compute (std::vector<pcl::people::PersonCluster<PointT> >& clusters)
+app::ObjectClassifierApp<PointT>::compute (std::vector<app::PersonCluster<PointT> >& clusters)
 {
   // Check if all mandatory variables have been set:
   if (!ground_coeffs_set_)
@@ -209,7 +209,7 @@ app::ObjectClassifierApp<PointT>::compute (std::vector<pcl::people::PersonCluste
 
   // ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   // Head based sub-clustering //
-  pcl::people::HeadBasedSubclustering<PointT> subclustering;
+  app::HeadBasedSubclustering<PointT> subclustering;
   subclustering.setInputCloud(no_ground_cloud_);
   subclustering.setGround(ground_coeffs_transformed_);
   subclustering.setInitialClusters(cluster_indices);
@@ -220,7 +220,7 @@ app::ObjectClassifierApp<PointT>::compute (std::vector<pcl::people::PersonCluste
 
   // Person confidence evaluation with HOG+SVM:
   // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-  for(typename std::vector<pcl::people::PersonCluster<PointT> >::iterator it = clusters.begin(); it != clusters.end(); ++it)
+  for(typename std::vector<app::PersonCluster<PointT> >::iterator it = clusters.begin(); it != clusters.end(); ++it)
   {
     //Evaluate confidence for the current PersonCluster:
     Eigen::Vector3f centroid = intrinsics_matrix_transformed_ * (it->getTCenter());
@@ -240,4 +240,4 @@ app::ObjectClassifierApp<PointT>::~GroundBasedPeopleDetectionApp ()
 {
   // TODO Auto-generated destructor stub
 }
-#endif /* PCL_PEOPLE_GROUND_BASED_PEOPLE_DETECTION_APP_HPP_ */
+#endif /* APP_GROUND_BASED_PEOPLE_DETECTION_APP_H_ */

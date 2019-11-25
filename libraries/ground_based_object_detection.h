@@ -1,5 +1,5 @@
-#ifndef OBJECT_DETECTION_APP_H_
-#define OBJECT_DETECTION_APP_H_
+#ifndef APP_GROUND_BASED_PEOPLE_DETECTION_APP_H_
+#define APP_GROUND_BASED_PEOPLE_DETECTION_APP_H_
 
 #include <pcl/point_types.h>
 #include <pcl/sample_consensus/sac_model_plane.h>
@@ -13,7 +13,6 @@
 #include <pcl/people/person_cluster.h>
 #include <pcl/people/head_based_subcluster.h>
 #include <pcl/people/person_classifier.h>
-
 
 
 namespace app{
@@ -71,7 +70,7 @@ namespace app{
              * \param[in] person_classifier Needed for people detection on RGB data.
              */
             void
-            setClassifier (pcl::people::PersonClassifier<pcl::RGB> person_classifier);
+            setClassifier (app::PersonClassifier<pcl::RGB> person_classifier);
 
             /**
              * \brief Set minimum and maximum allowed height and width for a person cluster.
@@ -143,7 +142,7 @@ namespace app{
              * \return true if the compute operation is successful, false otherwise.
              */
             bool
-            compute (std::vector<pcl::people::PersonCluster<PointT> >& clusters);
+            compute (std::vector<app::PersonCluster<PointT> >& clusters);
 
         protected:
             /** \brief voxel size */
@@ -205,12 +204,12 @@ namespace app{
 
             // ->>>>>>> CLASIFICADOR OJO ACA   
             /** \brief SVM-based person classifier */
-            // pcl::people::PersonClassifier<pcl::RGB> person_classifier_;  
+            // app::PersonClassifier<pcl::RGB> person_classifier_;  
 
             /** \brief flag stating if the classifier has been set or not */
             bool person_classifier_set_flag_;   
     }
 }
 
-#include <pcl/people/impl/ground_based_people_detection_app.hpp> // ACA RUTA DE LA IMPLEMENTACION OJO
-#endif /* PCL_PEOPLE_GROUND_BASED_PEOPLE_DETECTION_APP_H_ */
+#include "./imp/objectdetector.hpp" // ACA RUTA DE LA IMPLEMENTACION OJO
+#endif /* APP_GROUND_BASED_PEOPLE_DETECTION_APP_H_ */

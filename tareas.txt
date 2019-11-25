@@ -3,3 +3,14 @@
 3. HeadBasedSubclustering line 212 objectdetector.hpp
 
 Dentro de Person Classifier está
+
+
+1. Hacer el HeadBasedSubclustering
+2. Hacer el Cluster
+3. Revisar el Classifier
+
+///////////////////////////////////////////////
+
+Revisar todas las conexiones entre archivos y confirmar el classifier con Pytorch
+
+

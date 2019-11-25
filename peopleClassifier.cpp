@@ -7,7 +7,7 @@
 #include <pcl/sample_consensus/sac_model_plane.h>   // Estimador del plano (Suelo)
 #include <pcl/common/time.h>    // Tiempo
 
-#include <pcl/people/ground_based_people_detection_app.h>   // Libreria para encontrar personas
+#include "./libraries/objectdetector.h"   // Libreria para encontrar personas
 
 #include<mutex>
 #include<thread>
