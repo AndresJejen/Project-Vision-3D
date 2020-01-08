@@ -1,11 +1,54 @@
-#ifndef APP_HEAD_BASED_SUBCLUSTER_H_
-#define APP_HEAD_BASED_SUBCLUSTER_H_
+/*
+ * Software License Agreement (BSD License)
+ *
+ * Point Cloud Library (PCL) - www.pointclouds.org
+ * Copyright (c) 2013-, Open Perception, Inc.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution.
+ * * Neither the name of the copyright holder(s) nor the names of its
+ * contributors may be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * head_based_subcluster.h
+ * Created on: Nov 30, 2012
+ * Author: Matteo Munaro
+ */
+
+#ifndef PCL_PEOPLE_HEAD_BASED_SUBCLUSTER_H_
+#define PCL_PEOPLE_HEAD_BASED_SUBCLUSTER_H_
 
 #include <pcl/people/person_cluster.h>
 #include <pcl/people/height_map_2d.h>
 #include <pcl/point_types.h>
 
-namespace app {
+namespace pcl
+{
+  namespace people
+  {
     /** \brief @b HeadBasedSubclustering represents a class for searching for people inside a HeightMap2D based on a 3D head detection algorithm
       * \author Matteo Munaro
       * \ingroup people
@@ -33,7 +76,7 @@ namespace app {
        * \param[in] clusters Vector of PersonCluster.
        */
       void
-      subcluster (std::vector<app::PersonCluster<PointT> >& clusters);
+      subcluster (std::vector<pcl::people::PersonCluster<PointT> >& clusters);
 
       /**
        * \brief Merge clusters close in floor coordinates.
@@ -42,8 +85,8 @@ namespace app {
        * \param[in] output_clusters Output vector of PersonCluster (after merging).
        */
       void
-      mergeClustersCloseInFloorCoordinates (std::vector<app::PersonCluster<PointT> >& input_clusters,
-          std::vector<app::PersonCluster<PointT> >& output_clusters);
+      mergeClustersCloseInFloorCoordinates (std::vector<pcl::people::PersonCluster<PointT> >& input_clusters,
+          std::vector<pcl::people::PersonCluster<PointT> >& output_clusters);
 
       /**
        * \brief Create subclusters centered on the heads position from the current cluster.
@@ -54,8 +97,8 @@ namespace app {
        * \param[out] subclusters Output vector of PersonCluster objects derived from the input cluster.
        */
       void
-      createSubClusters (app::PersonCluster<PointT>& cluster, int maxima_number_after_filtering,  std::vector<int>& maxima_cloud_indices_filtered,
-          std::vector<app::PersonCluster<PointT> >& subclusters);
+      createSubClusters (pcl::people::PersonCluster<PointT>& cluster, int maxima_number_after_filtering,  std::vector<int>& maxima_cloud_indices_filtered,
+          std::vector<pcl::people::PersonCluster<PointT> >& subclusters);
 
       /**
        * \brief Set input cloud.
@@ -182,6 +225,7 @@ namespace app {
       /** \brief minimum distance between persons' heads */
       float heads_minimum_distance_;           
     };
-}
+  } /* namespace people */
+} /* namespace pcl */
 #include <pcl/people/impl/head_based_subcluster.hpp>
-#endif /* APP_HEAD_BASED_SUBCLUSTER_H_ */
+#endif /* PCL_PEOPLE_HEAD_BASED_SUBCLUSTER_H_ */

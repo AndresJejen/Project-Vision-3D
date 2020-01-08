@@ -1,10 +1,50 @@
-#ifndef APP_HEAD_BASED_SUBCLUSTER_HPP_
-#define APP_HEAD_BASED_SUBCLUSTER_HPP_
+/*
+ * Software License Agreement (BSD License)
+ *
+ * Point Cloud Library (PCL) - www.pointclouds.org
+ * Copyright (c) 2013-, Open Perception, Inc.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution.
+ * * Neither the name of the copyright holder(s) nor the names of its
+ * contributors may be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * head_based_subcluster.hpp
+ * Created on: Nov 30, 2012
+ * Author: Matteo Munaro
+ */
+
+#ifndef PCL_PEOPLE_HEAD_BASED_SUBCLUSTER_HPP_
+#define PCL_PEOPLE_HEAD_BASED_SUBCLUSTER_HPP_
 
 #include <pcl/people/head_based_subcluster.h>
 
 template <typename PointT>
-app::HeadBasedSubclustering<PointT>::HeadBasedSubclustering ()
+pcl::people::HeadBasedSubclustering<PointT>::HeadBasedSubclustering ()
 {
   // set default values for optional parameters:
   vertical_ = false;
@@ -20,79 +60,79 @@ app::HeadBasedSubclustering<PointT>::HeadBasedSubclustering ()
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setInputCloud (PointCloudPtr& cloud)
+pcl::people::HeadBasedSubclustering<PointT>::setInputCloud (PointCloudPtr& cloud)
 {
   cloud_ = cloud;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setGround (Eigen::VectorXf& ground_coeffs)
+pcl::people::HeadBasedSubclustering<PointT>::setGround (Eigen::VectorXf& ground_coeffs)
 {
   ground_coeffs_ = ground_coeffs;
   sqrt_ground_coeffs_ = (ground_coeffs - Eigen::Vector4f(0.0f, 0.0f, 0.0f, ground_coeffs(3))).norm();
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setInitialClusters (std::vector<pcl::PointIndices>& cluster_indices)
+pcl::people::HeadBasedSubclustering<PointT>::setInitialClusters (std::vector<pcl::PointIndices>& cluster_indices)
 {
   cluster_indices_ = cluster_indices;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setSensorPortraitOrientation (bool vertical)
+pcl::people::HeadBasedSubclustering<PointT>::setSensorPortraitOrientation (bool vertical)
 {
   vertical_ = vertical;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setHeightLimits (float min_height, float max_height)
+pcl::people::HeadBasedSubclustering<PointT>::setHeightLimits (float min_height, float max_height)
 {
   min_height_ = min_height;
   max_height_ = max_height;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setDimensionLimits (int min_points, int max_points)
+pcl::people::HeadBasedSubclustering<PointT>::setDimensionLimits (int min_points, int max_points)
 {
   min_points_ = min_points;
   max_points_ = max_points;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setMinimumDistanceBetweenHeads (float heads_minimum_distance)
+pcl::people::HeadBasedSubclustering<PointT>::setMinimumDistanceBetweenHeads (float heads_minimum_distance)
 {
   heads_minimum_distance_= heads_minimum_distance;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::setHeadCentroid (bool head_centroid)
+pcl::people::HeadBasedSubclustering<PointT>::setHeadCentroid (bool head_centroid)
 {
   head_centroid_ = head_centroid;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::getHeightLimits (float& min_height, float& max_height)
+pcl::people::HeadBasedSubclustering<PointT>::getHeightLimits (float& min_height, float& max_height)
 {
   min_height = min_height_;
   max_height = max_height_;
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::getDimensionLimits (int& min_points, int& max_points)
+pcl::people::HeadBasedSubclustering<PointT>::getDimensionLimits (int& min_points, int& max_points)
 {
   min_points = min_points_;
   max_points = max_points_;
 }
 
 template <typename PointT> float
-app::HeadBasedSubclustering<PointT>::getMinimumDistanceBetweenHeads ()
+pcl::people::HeadBasedSubclustering<PointT>::getMinimumDistanceBetweenHeads ()
 {
   return (heads_minimum_distance_);
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::mergeClustersCloseInFloorCoordinates (std::vector<app::PersonCluster<PointT> >& input_clusters,
-    std::vector<app::PersonCluster<PointT> >& output_clusters)
+pcl::people::HeadBasedSubclustering<PointT>::mergeClustersCloseInFloorCoordinates (std::vector<pcl::people::PersonCluster<PointT> >& input_clusters,
+    std::vector<pcl::people::PersonCluster<PointT> >& output_clusters)
 {
   float min_distance_between_cluster_centers = 0.4;                   // meters
   float normalize_factor = std::pow(sqrt_ground_coeffs_, 2);          // sqrt_ground_coeffs ^ 2 (precomputed for speed)
@@ -144,7 +184,7 @@ app::HeadBasedSubclustering<PointT>::mergeClustersCloseInFloorCoordinates (std::
             }
           }
         }
-        app::PersonCluster<PointT> cluster(cloud_, point_indices, ground_coeffs_, sqrt_ground_coeffs_, head_centroid_, vertical_);
+        pcl::people::PersonCluster<PointT> cluster(cloud_, point_indices, ground_coeffs_, sqrt_ground_coeffs_, head_centroid_, vertical_);
         output_clusters.push_back(cluster);
       }
     }
@@ -152,8 +192,8 @@ app::HeadBasedSubclustering<PointT>::mergeClustersCloseInFloorCoordinates (std::
     }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::createSubClusters (app::PersonCluster<PointT>& cluster, int maxima_number,
-    std::vector<int>& maxima_cloud_indices, std::vector<app::PersonCluster<PointT> >& subclusters)
+pcl::people::HeadBasedSubclustering<PointT>::createSubClusters (pcl::people::PersonCluster<PointT>& cluster, int maxima_number,
+    std::vector<int>& maxima_cloud_indices, std::vector<pcl::people::PersonCluster<PointT> >& subclusters)
 {
   // create new clusters from the current cluster and put corresponding indices into sub_clusters_indices:
   float normalize_factor = std::pow(sqrt_ground_coeffs_, 2);          // sqrt_ground_coeffs ^ 2 (precomputed for speed)
@@ -204,7 +244,7 @@ app::HeadBasedSubclustering<PointT>::createSubClusters (app::PersonCluster<Point
       pcl::PointIndices point_indices;
       point_indices.indices = sub_clusters_indices[i];                // indices associated to the i-th maximum
 
-      app::PersonCluster<PointT> cluster(cloud_, point_indices, ground_coeffs_, sqrt_ground_coeffs_, head_centroid_, vertical_);
+      pcl::people::PersonCluster<PointT> cluster(cloud_, point_indices, ground_coeffs_, sqrt_ground_coeffs_, head_centroid_, vertical_);
       subclusters.push_back(cluster);
       //std::cout << "Cluster number of points: " << subclusters_number_of_points(i) << std::endl;
     }
@@ -212,34 +252,34 @@ app::HeadBasedSubclustering<PointT>::createSubClusters (app::PersonCluster<Point
 }
 
 template <typename PointT> void
-app::HeadBasedSubclustering<PointT>::subcluster (std::vector<app::PersonCluster<PointT> >& clusters)
+pcl::people::HeadBasedSubclustering<PointT>::subcluster (std::vector<pcl::people::PersonCluster<PointT> >& clusters)
 {
   // Check if all mandatory variables have been set:
   if (sqrt_ground_coeffs_ != sqrt_ground_coeffs_)
   {
-    PCL_ERROR ("[app::HeadBasedSubclustering::subcluster] Floor parameters have not been set or they are not valid!\n");
+    PCL_ERROR ("[pcl::people::pcl::people::HeadBasedSubclustering::subcluster] Floor parameters have not been set or they are not valid!\n");
     return;
   }
   if (cluster_indices_.size() == 0)
   {
-    PCL_ERROR ("[app::HeadBasedSubclustering::subcluster] Cluster indices have not been set!\n");
+    PCL_ERROR ("[pcl::people::pcl::people::HeadBasedSubclustering::subcluster] Cluster indices have not been set!\n");
     return;
   }
   if (cloud_ == NULL)
   {
-    PCL_ERROR ("[app::HeadBasedSubclustering::subcluster] Input cloud has not been set!\n");
+    PCL_ERROR ("[pcl::people::pcl::people::HeadBasedSubclustering::subcluster] Input cloud has not been set!\n");
     return;
   }
 
   // Person clusters creation from clusters indices:
   for(std::vector<pcl::PointIndices>::const_iterator it = cluster_indices_.begin(); it != cluster_indices_.end(); ++it)
   {
-    app::PersonCluster<PointT> cluster(cloud_, *it, ground_coeffs_, sqrt_ground_coeffs_, head_centroid_, vertical_);  // PersonCluster creation
+    pcl::people::PersonCluster<PointT> cluster(cloud_, *it, ground_coeffs_, sqrt_ground_coeffs_, head_centroid_, vertical_);  // PersonCluster creation
     clusters.push_back(cluster);
   }
 
   // Remove clusters with too high height from the ground plane:
-  std::vector<app::PersonCluster<PointT> > new_clusters;
+  std::vector<pcl::people::PersonCluster<PointT> > new_clusters;
   for(unsigned int i = 0; i < clusters.size(); i++)   // for every cluster
   {
     if (clusters[i].getHeight() <= max_height_)
@@ -252,17 +292,17 @@ app::HeadBasedSubclustering<PointT>::subcluster (std::vector<app::PersonCluster<
   mergeClustersCloseInFloorCoordinates(clusters, new_clusters);
   clusters = new_clusters;
 
-  std::vector<app::PersonCluster<PointT> > subclusters;
+  std::vector<pcl::people::PersonCluster<PointT> > subclusters;
   int cluster_min_points_sub = int(float(min_points_) * 1.5);
   //  int cluster_max_points_sub = max_points_;
 
   // create HeightMap2D object:
-  app::HeightMap2D<PointT> height_map_obj;
+  pcl::people::HeightMap2D<PointT> height_map_obj;
   height_map_obj.setGround(ground_coeffs_);
   height_map_obj.setInputCloud(cloud_);
   height_map_obj.setSensorPortraitOrientation(vertical_);
   height_map_obj.setMinimumDistanceBetweenMaxima(heads_minimum_distance_);
-  for(typename std::vector<app::PersonCluster<PointT> >::iterator it = clusters.begin(); it != clusters.end(); ++it)   // for every cluster
+  for(typename std::vector<pcl::people::PersonCluster<PointT> >::iterator it = clusters.begin(); it != clusters.end(); ++it)   // for every cluster
   {
     float height = it->getHeight();
     int number_of_points = it->getNumberPoints();
@@ -293,8 +333,8 @@ app::HeadBasedSubclustering<PointT>::subcluster (std::vector<app::PersonCluster<
 }
 
 template <typename PointT>
-app::HeadBasedSubclustering<PointT>::~HeadBasedSubclustering ()
+pcl::people::HeadBasedSubclustering<PointT>::~HeadBasedSubclustering ()
 {
   // TODO Auto-generated destructor stub
 }
-#endif /* APP_HEAD_BASED_SUBCLUSTER_HPP_ */
+#endif /* PCL_PEOPLE_HEAD_BASED_SUBCLUSTER_HPP_ */

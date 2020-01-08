@@ -7,7 +7,8 @@
 #include <pcl/sample_consensus/sac_model_plane.h>   // Estimador del plano (Suelo)
 #include <pcl/common/time.h>    // Tiempo
 
-#include "./libraries/objectdetector.h"   // Libreria para encontrar personas
+#include "./libraries/ground_based_object_detection.h"   // Libreria para encontrar personas
+#include "./libraries/person_cluster.h"
 
 #include<mutex>
 #include<thread>
@@ -35,7 +36,7 @@ int print_help()
   std::cout << "*******************************************************" << std::endl;
   std::cout << "Ground based people detection app options:" << std::endl;
   std::cout << "   --help    <show_this_help>" << std::endl;
-  std::cout << "   --svm     <path_to_svm_file>" << std::endl;
+  std::cout << "   --resnet18     <path_to_resnet18_file>" << std::endl;
   std::cout << "   --conf    <minimum_HOG_confidence (default = -1.5)>" << std::endl;
   std::cout << "   --min_h   <minimum_person_height (default = 1.3)>" << std::endl;
   std::cout << "   --max_h   <maximum_person_height (default = 2.3)>" << std::endl;
@@ -82,6 +83,8 @@ int main (int argc, char** argv) {
     if(pcl::console::find_switch (argc, argv, "--help") || pcl::console::find_switch (argc, argv, "-h"))
         return print_help();
 
+    std::string resnetfilename = "./resnetpretrained.pt";
+    float min_confidence = 0.6;
     float min_height = 1.3;
     float max_height = 2.3;
     float voxel_size = 0.06;
@@ -93,11 +96,7 @@ int main (int argc, char** argv) {
 
     // Read Kinect live stream:
     pcl::Grabber* interface = new pcl::OpenNIGrabber();
-
-    boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f =
-                boost::bind(&grabberCallback, _1);
-    
-
+    boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f = boost::bind(&grabberCallback, _1);
     interface->registerCallback (f);
     interface->start ();
 
@@ -144,13 +143,22 @@ int main (int argc, char** argv) {
     // __________________________________________________________________________________________________________________________________-
     // DEFINICION DEL CLASIFICADOR
     // Carga de parametros para la clasificación
+    pcl::people::ObjectClassifier<pcl::RGB> objectClassifier;
+    objectClassifier.loadPytorchClassifier(resnetfilename);
 
     // DEFINICION DEL DETECTOR
     // Person cluster limits
     // Tamaño del voxel
     // Intrisecos del kinnect
     // ingreso del clasificador
-    // __________________________________________________________________________________________________________________________________-
+    // People detection app initialization:
+    pcl::people::GroundBasedPeopleDetectionApp<PointT> object_detector;    // object detection object
+    object_detector.setVoxelSize(voxel_size);                        // set the voxel size
+    object_detector.setIntrinsics(rgb_intrinsics_matrix);            // set RGB camera intrinsic parameters
+    object_detector.setClassifier(person_classifier);                // set person classifier
+    object_detector.setPersonClusterLimits(min_height, max_height, 0.1, 8.0);  // set person classifier
+    //  people_detector.setSensorPortraitOrientation(true);             // set sensor orientation to vertical
+    // ____________________________
 
     // For timing:
     static unsigned count = 0;
@@ -164,15 +172,13 @@ int main (int argc, char** argv) {
             new_cloud_available_flag = false;
         // Perform people detection on the new cloud:
 
-        // __________________________________________________________________________________________________________________________________-
-        // DEFINICION DEL CLUSTER
-        // DETECTOR ingresa nueva nube de puntos
-        // DETECTOR ingresa definicion del suelo
-        // DETECTOR ingresa cluster y computo
+        // Perform people detection on the new cloud:
+        std::vector<pcl::people::PersonCluster<PointT> > clusters;   // vector containing persons clusters
+        object_detector.setInputCloud(cloud);
+        object_detector.setGround(ground_coeffs);                    // set floor coefficients
+        object_detector.compute(clusters);                           // perform people detection
 
-        // DETECTOR Actualización de coeficientes del suelo a variable de este archivo desde DETECTOR
-        // __________________________________________________________________________________________________________________________________-
-
+        ground_coeffs = people_detector.getGround();                 // get updated floor coefficients
         // Dicujar la caja para las personas
         viewer.removeAllPointClouds();
         viewer.removeAllShapes();
@@ -180,12 +186,16 @@ int main (int argc, char** argv) {
         viewer.addPointCloud<PointT> (cloud, rgb, "input_cloud");
         unsigned int k = 0;
 
-        // __________________________________________________________________________________________________________________________________-
-        // Ciclo for por cada cluster
-        // por cada uno evaluar su confidencia y si la cumple DESDE CLUSTER OBJECT
-        // Dibujar la caja
-        // __________________________________________________________________________________________________________________________________-
-
+      for(std::vector<pcl::people::PersonCluster<PointT> >::iterator it = clusters.begin(); it != clusters.end(); ++it)
+      {
+        if(it->getObjectConfidence()[1] > min_confidence)             // draw only people with confidence above a threshold
+        {
+          // draw theoretical person bounding box in the PCL viewer:
+          it->drawTBoundingBoxObject(viewer, k, it->getObjectConfidence()[0]);
+          k++;
+        }
+        
+      }
         std::cout << k << " objects found" << std::endl;
         viewer.spinOnce();
 

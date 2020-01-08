@@ -1,10 +1,52 @@
-#ifndef APP_PERSON_CLUSTER_H_
-#define APP_PERSON_CLUSTER_H_
+/*
+ * Software License Agreement (BSD License)
+ *
+ * Point Cloud Library (PCL) - www.pointclouds.org
+ * Copyright (c) 2013-, Open Perception, Inc.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution.
+ * * Neither the name of the copyright holder(s) nor the names of its
+ * contributors may be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * person_cluster.h
+ * Created on: Nov 30, 2012
+ * Author: Matteo Munaro
+ */
+
+#ifndef PCL_PEOPLE_PERSON_CLUSTER_H_
+#define PCL_PEOPLE_PERSON_CLUSTER_H_
 
 #include <pcl/point_types.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
-namespace app
+namespace pcl
+{
+  namespace people
   {
     /** \brief @b PersonCluster represents a class for representing information about a cluster containing a person.
      * \author Filippo Basso, Matteo Munaro
@@ -90,6 +132,12 @@ namespace app
       bool vertical_;
       /** \brief PersonCluster HOG confidence. */
       float person_confidence_;
+
+      /** \brief ObjectConfidence Array Pytorch Resnet confidence. */
+      float[] object_confidence_;
+
+      /** \brief Object List from ImageNet. */
+      String classList_[1000];
 
     public:
 
@@ -284,5 +332,6 @@ namespace app
 
     };
   } /* namespace people */
+} /* namespace pcl */
 #include <pcl/people/impl/person_cluster.hpp>
-#endif /* APP_PERSON_CLUSTER_H_ */
+#endif /* PCL_PEOPLE_PERSON_CLUSTER_H_ */

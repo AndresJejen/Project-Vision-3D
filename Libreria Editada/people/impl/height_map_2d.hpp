@@ -1,10 +1,50 @@
+/*
+ * Software License Agreement (BSD License)
+ *
+ * Point Cloud Library (PCL) - www.pointclouds.org
+ * Copyright (c) 2013-, Open Perception, Inc.
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ * * Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following
+ * disclaimer in the documentation and/or other materials provided
+ * with the distribution.
+ * * Neither the name of the copyright holder(s) nor the names of its
+ * contributors may be used to endorse or promote products derived
+ * from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * height_map_2d.hpp
+ * Created on: Nov 30, 2012
+ * Author: Matteo Munaro
+ */
+
 #include <pcl/people/height_map_2d.h>
 
-#ifndef APP_HEIGHT_MAP_2D_HPP_
-#define APP_HEIGHT_MAP_2D_HPP_
+#ifndef PCL_PEOPLE_HEIGHT_MAP_2D_HPP_
+#define PCL_PEOPLE_HEIGHT_MAP_2D_HPP_
 
 template <typename PointT>
-app::HeightMap2D<PointT>::HeightMap2D ()
+pcl::people::HeightMap2D<PointT>::HeightMap2D ()
 {
   // set default values for optional parameters:
   vertical_ = false;
@@ -16,17 +56,17 @@ app::HeightMap2D<PointT>::HeightMap2D ()
 }
 
 template <typename PointT> void
-app::HeightMap2D<PointT>::compute (app::PersonCluster<PointT>& cluster)
+pcl::people::HeightMap2D<PointT>::compute (pcl::people::PersonCluster<PointT>& cluster)
 {
   // Check if all mandatory variables have been set:
   if (sqrt_ground_coeffs_ != sqrt_ground_coeffs_)
   {
-    PCL_ERROR ("[app::HeightMap2D::compute] Floor parameters have not been set or they are not valid!\n");
+    PCL_ERROR ("[pcl::people::HeightMap2D::compute] Floor parameters have not been set or they are not valid!\n");
     return;
   }
   if (cloud_ == NULL)
   {
-    PCL_ERROR ("[app::HeightMap2D::compute] Input cloud has not been set!\n");
+    PCL_ERROR ("[pcl::people::HeightMap2D::compute] Input cloud has not been set!\n");
     return;
   }
 
@@ -76,7 +116,7 @@ app::HeightMap2D<PointT>::compute (app::PersonCluster<PointT>& cluster)
 }
 
 template <typename PointT> void
-app::HeightMap2D<PointT>::searchLocalMaxima ()
+pcl::people::HeightMap2D<PointT>::searchLocalMaxima ()
 {
   // Search for local maxima:
   maxima_number_ = 0;
@@ -160,7 +200,7 @@ app::HeightMap2D<PointT>::searchLocalMaxima ()
 }
 
 template <typename PointT> void
-app::HeightMap2D<PointT>::filterMaxima ()
+pcl::people::HeightMap2D<PointT>::filterMaxima ()
 {
   // Filter maxima according to their distance when projected on the ground plane:
   maxima_number_after_filtering_ = 0;
@@ -205,69 +245,69 @@ app::HeightMap2D<PointT>::filterMaxima ()
 }
 
 template <typename PointT> void
-app::HeightMap2D<PointT>::setInputCloud (PointCloudPtr& cloud)
+pcl::people::HeightMap2D<PointT>::setInputCloud (PointCloudPtr& cloud)
 {
   cloud_ = cloud;
 }
 
 template <typename PointT>
-void app::HeightMap2D<PointT>::setGround(Eigen::VectorXf& ground_coeffs)
+void pcl::people::HeightMap2D<PointT>::setGround(Eigen::VectorXf& ground_coeffs)
 {
   ground_coeffs_ = ground_coeffs;
   sqrt_ground_coeffs_ = (ground_coeffs - Eigen::Vector4f(0.0f, 0.0f, 0.0f, ground_coeffs(3))).norm();
 }
 
 template <typename PointT> void
-app::HeightMap2D<PointT>::setBinSize (float bin_size)
+pcl::people::HeightMap2D<PointT>::setBinSize (float bin_size)
 {
   bin_size_ = bin_size;
 }
 
 template <typename PointT> void
-app::HeightMap2D<PointT>::setMinimumDistanceBetweenMaxima (float minimum_distance_between_maxima)
+pcl::people::HeightMap2D<PointT>::setMinimumDistanceBetweenMaxima (float minimum_distance_between_maxima)
 {
   min_dist_between_maxima_ = minimum_distance_between_maxima;
 }
 
 template <typename PointT> void
-app::HeightMap2D<PointT>::setSensorPortraitOrientation (bool vertical)
+pcl::people::HeightMap2D<PointT>::setSensorPortraitOrientation (bool vertical)
 {
   vertical_ = vertical;
 }
 
 template <typename PointT> std::vector<int>&
-app::HeightMap2D<PointT>::getHeightMap ()
+pcl::people::HeightMap2D<PointT>::getHeightMap ()
 {
   return (buckets_);
 }
 
 template <typename PointT> float
-app::HeightMap2D<PointT>::getBinSize ()
+pcl::people::HeightMap2D<PointT>::getBinSize ()
 {
   return (bin_size_);
 }
 
 template <typename PointT> float
-app::HeightMap2D<PointT>::getMinimumDistanceBetweenMaxima ()
+pcl::people::HeightMap2D<PointT>::getMinimumDistanceBetweenMaxima ()
 {
   return (min_dist_between_maxima_);
 }
 
 template <typename PointT> int&
-app::HeightMap2D<PointT>::getMaximaNumberAfterFiltering ()
+pcl::people::HeightMap2D<PointT>::getMaximaNumberAfterFiltering ()
 {
   return (maxima_number_after_filtering_);
 }
 
 template <typename PointT> std::vector<int>&
-app::HeightMap2D<PointT>::getMaximaCloudIndicesFiltered ()
+pcl::people::HeightMap2D<PointT>::getMaximaCloudIndicesFiltered ()
 {
   return (maxima_cloud_indices_filtered_);
 }
 
 template <typename PointT>
-app::HeightMap2D<PointT>::~HeightMap2D ()
+pcl::people::HeightMap2D<PointT>::~HeightMap2D ()
 {
   // TODO Auto-generated destructor stub
 }
-#endif /* APP_HEIGHT_MAP_2D_HPP_ */
+#endif /* PCL_PEOPLE_HEIGHT_MAP_2D_HPP_ */
