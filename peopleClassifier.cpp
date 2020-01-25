@@ -1,4 +1,4 @@
-// Importacion de librerias
+// Importacion de librerias.
 
 #include <pcl/console/parse.h>  // Para leer las variables en la ejecución por terminal
 #include <pcl/point_types.h>    // Tipos de datos
