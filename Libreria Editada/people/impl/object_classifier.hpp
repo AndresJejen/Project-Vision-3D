@@ -54,21 +54,20 @@ pcl::people::ObjectClassifier<PointT>::loadPytorchClassifier (str::string classi
 {
   try {
     // Deserialize the ScriptModule from a file using torch::jit::load().
-    module = torch::jit::load(argv[1]);
+    module = torch::jit::load(classifier_filename);
     std::cout << "ok\n";
     window_height_ = 224;
     window_width_ = 224;
-    224
     return (true);
   }
   catch (const c10::Error& e) {
-    PCL_ERROR ("[pcl::people::PersonClassifier::loadSVMFromFile] Invalid SVM file!\n");
+    PCL_ERROR ("[pcl::people::ObjectClassifier::loadPytorchClassifier] Invalid PT file!\n");
     return (false);
   }
 }
 
 template <typename PointT> void
-pcl::people::PersonClassifier<PointT>::resize (PointCloudPtr& input_image,
+pcl::people::ObjectClassifier<PointT>::resize (PointCloudPtr& input_image,
               PointCloudPtr& output_image,
               int width,
               int height)
@@ -136,7 +135,7 @@ pcl::people::PersonClassifier<PointT>::resize (PointCloudPtr& input_image,
 }
 
 template <typename PointT> void
-pcl::people::PersonClassifier<PointT>::copyMakeBorder (PointCloudPtr& input_image,
+pcl::people::ObjectClassifier<PointT>::copyMakeBorder (PointCloudPtr& input_image,
                   PointCloudPtr& output_image,
                   int xmin,
                   int ymin,
@@ -171,7 +170,7 @@ pcl::people::PersonClassifier<PointT>::copyMakeBorder (PointCloudPtr& input_imag
 }
 
 template <typename PointT> float[]
-pcl::people::PersonClassifier<PointT>::evaluate (float height_person,
+pcl::people::ObjectClassifier<PointT>::evaluate (float height_person,
               float xc,
               float yc,
               PointCloudPtr& image)
@@ -235,7 +234,7 @@ pcl::people::PersonClassifier<PointT>::evaluate (float height_person,
 
     // Aca el torch MAX
 
-    std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
+    // std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
 
     // Falta Ver que clases corresponden y encontrar el valor mayor - luego de eso ese es el que escogemos como confidencia
     // Se podria agregar una etapa de softmax para estar en probabilidades.
@@ -252,7 +251,7 @@ pcl::people::PersonClassifier<PointT>::evaluate (float height_person,
 }
 
 template <typename PointT> double
-pcl::people::PersonClassifier<PointT>::evaluate (PointCloudPtr& image,
+pcl::people::ObjectClassifier<PointT>::evaluate (PointCloudPtr& image,
               Eigen::Vector3f& bottom,
               Eigen::Vector3f& top,
               Eigen::Vector3f& centroid,

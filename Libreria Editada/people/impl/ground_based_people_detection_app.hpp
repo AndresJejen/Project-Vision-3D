@@ -132,7 +132,7 @@ pcl::people::GroundBasedPeopleDetectionApp<PointT>::setClassifier (pcl::people::
 }
 
 template <typename PointT> void
-pcl::people::GroundBasedPeopleDetectionApp<PointT>::setClassifier (pcl::people::ObjectClassifier<pcl::RGB> object_classifier)
+pcl::people::GroundBasedPeopleDetectionApp<PointT>::setObjectClassifier (pcl::people::ObjectClassifier<pcl::RGB> object_classifier)
 {
   object_classifier_ = object_classifier;
   object_classifier_set_flag_ = true;
@@ -333,15 +333,15 @@ pcl::people::GroundBasedPeopleDetectionApp<PointT>::compute (std::vector<pcl::pe
     PCL_ERROR ("[pcl::people::GroundBasedPeopleDetectionApp::compute] Camera intrinsic parameters have not been set!\n");
     return (false);
   }
-  if (!person_classifier_set_flag_ || !object_classifier_set_flag_ )
+  if (!person_classifier_set_flag_ && !object_classifier_set_flag_ )
   {
-    PCL_ERROR ("[pcl::people::GroundBasedPeopleDetectionApp::compute] Person or Object classifier has not been set!\n");
+    PCL_ERROR ("[pcl::people::GroundBasedPeopleDetectionApp::compute] Person or Object or People classifier has not been set!\n");
     return (false);
   }
 
   // Fill rgb image:
   rgb_image_->points.clear();                            // clear RGB pointcloud
-  extractRGBFromPointCloud(cloud_, rgb_image_);          // fill RGB pointcloud
+  extractRGBFromPointCloud(cloud_, rgb_image_);          // fill RGB pointcloud flatten
 
   // Downsample of sampling_factor in every dimension:
   if (sampling_factor_ != 1)

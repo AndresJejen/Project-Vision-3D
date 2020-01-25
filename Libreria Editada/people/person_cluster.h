@@ -134,10 +134,10 @@ namespace pcl
       float person_confidence_;
 
       /** \brief ObjectConfidence Array Pytorch Resnet confidence. */
-      float[] object_confidence_;
+      float object_confidence_[2];
 
       /** \brief Object List from ImageNet. */
-      String classList_[1000];
+      std::string classList_[1000];
 
     public:
 
@@ -305,12 +305,29 @@ namespace pcl
       setPersonConfidence (float confidence);
 
       /**
+       * \brief Sets the PyTorch confidence.
+       * \param[in] confidence
+       */
+      void
+      setObjectConfidence (float confidence[]);
+
+      /**
        * \brief Draws the theoretical 3D bounding box of the cluster in the PCL visualizer.
        * \param[in] viewer PCL visualizer.
        * \param[in] person_number progressive number representing the person.
        */
       void
       drawTBoundingBox (pcl::visualization::PCLVisualizer& viewer, int person_number);
+
+      /**
+       * \brief Draws the theoretical 3D bounding box of the cluster in the PCL visualizer.
+       * \param[in] viewer PCL visualizer.
+       * \param[in] object_number progressive number representing the person.
+       * \param[in] classindex progressive number representing the index class from Resnet.
+       */
+      void
+      drawTBoundingBoxObject (pcl::visualization::PCLVisualizer& viewer, int object_number);
+
 
       /**
        * \brief For sorting purpose: sort by distance.

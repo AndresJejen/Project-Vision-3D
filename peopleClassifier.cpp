@@ -10,6 +10,10 @@
 #include "./libraries/ground_based_object_detection.h"   // Libreria para encontrar personas
 #include "./libraries/person_cluster.h"
 
+#include "./libraries/ground_based_object_detection.h"   // Libreria para encontrar personas
+#include "./libraries/person_cluster.h"
+
+
 #include<mutex>
 #include<thread>
 #include<iostream>
@@ -84,26 +88,36 @@ int main (int argc, char** argv) {
         return print_help();
 
     std::string resnetfilename = "./resnetpretrained.pt";
+    std::string testcloud = "";
     float min_confidence = 0.6;
     float min_height = 1.3;
     float max_height = 2.3;
     float voxel_size = 0.06;
+
     Eigen::Matrix3f rgb_intrinsics_matrix;
     rgb_intrinsics_matrix << 525, 0.0, 319.5, 0.0, 525, 239.5, 0.0, 0.0, 1.0; // Kinect RGB camera intrinsics
 
     pcl::console::parse_argument (argc, argv, "--min_h", min_height);
     pcl::console::parse_argument (argc, argv, "--max_h", max_height);
 
-    // Read Kinect live stream:
-    pcl::Grabber* interface = new pcl::OpenNIGrabber();
-    boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f = boost::bind(&grabberCallback, _1);
-    interface->registerCallback (f);
-    interface->start ();
+    pcl::console::parse_argument (argc, argv, "--test_cloud", testcloud);
 
-    // Wait for the first frame:
-    while(!new_cloud_available_flag) 
-        std::this_thread::sleep_for(1ms);
-    new_cloud_available_flag = false;
+    if (testcloud !== "") {
+      new_cloud_available_flag = true;
+      // Código de leer PCD _____________________ ////////////////////////////////////////
+      // * cloud = from PCD
+    } else {
+      // Read Kinect live stream:
+      pcl::Grabber* interface = new pcl::OpenNIGrabber();
+      boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f = boost::bind(&grabberCallback, _1);
+      interface->registerCallback (f);
+      interface->start ();
+
+      // Wait for the first frame:
+      while(!new_cloud_available_flag) 
+          std::this_thread::sleep_for(1ms);
+      new_cloud_available_flag = false;
+    }
 
     cloud_mutex.lock ();    // for not overwriting the point cloud
 
@@ -155,7 +169,7 @@ int main (int argc, char** argv) {
     pcl::people::GroundBasedPeopleDetectionApp<PointT> object_detector;    // object detection object
     object_detector.setVoxelSize(voxel_size);                        // set the voxel size
     object_detector.setIntrinsics(rgb_intrinsics_matrix);            // set RGB camera intrinsic parameters
-    object_detector.setClassifier(person_classifier);                // set person classifier
+    object_detector.setObjectClassifier(objectClassifier);                // set person classifier
     object_detector.setPersonClusterLimits(min_height, max_height, 0.1, 8.0);  // set person classifier
     //  people_detector.setSensorPortraitOrientation(true);             // set sensor orientation to vertical
     // ____________________________
@@ -178,7 +192,7 @@ int main (int argc, char** argv) {
         object_detector.setGround(ground_coeffs);                    // set floor coefficients
         object_detector.compute(clusters);                           // perform people detection
 
-        ground_coeffs = people_detector.getGround();                 // get updated floor coefficients
+        ground_coeffs = object_detector.getGround();                 // get updated floor coefficients
         // Dicujar la caja para las personas
         viewer.removeAllPointClouds();
         viewer.removeAllShapes();
@@ -191,7 +205,7 @@ int main (int argc, char** argv) {
         if(it->getObjectConfidence()[1] > min_confidence)             // draw only people with confidence above a threshold
         {
           // draw theoretical person bounding box in the PCL viewer:
-          it->drawTBoundingBoxObject(viewer, k, it->getObjectConfidence()[0]);
+          it->drawTBoundingBoxObject(viewer, k);
           k++;
         }
         
