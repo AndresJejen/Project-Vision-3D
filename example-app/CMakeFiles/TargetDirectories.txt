@@ -1,0 +1,3 @@
+/home/purplecypher/example-app/CMakeFiles/rebuild_cache.dir
+/home/purplecypher/example-app/CMakeFiles/edit_cache.dir
+/home/purplecypher/example-app/CMakeFiles/example-app.dir

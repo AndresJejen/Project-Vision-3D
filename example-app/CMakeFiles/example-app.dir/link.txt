@@ -1,0 +1,1 @@
+/usr/bin/c++   -D_GLIBCXX_USE_CXX11_ABI=0  -rdynamic CMakeFiles/example-app.dir/example-app.cpp.o  -o example-app -Wl,-rpath,/home/purplecypher/libtorch/lib /home/purplecypher/libtorch/lib/libtorch.so /home/purplecypher/libtorch/lib/libc10.so /home/purplecypher/libtorch/lib/libc10.so -lpthread -Wl,--no-as-needed,/home/purplecypher/libtorch/lib/libtorch.so -Wl,--as-needed 
