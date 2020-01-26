@@ -228,19 +228,22 @@ pcl::people::ObjectClassifier<PointT>::evaluate (float height_person,
     inputs.push_back(f);
 
     // Execute the model and turn its output into a tensor.
-    at::Tensor output = module.forward(inputs).toTensor();
-
-    // aCA sOFTMAX first
-
-    // Aca el torch MAX
-
-    // std::cout << output.slice(/*dim=*/1, /*start=*/0, /*end=*/5) << '\n';
-
-    // Falta Ver que clases corresponden y encontrar el valor mayor - luego de eso ese es el que escogemos como confidencia
-    // Se podria agregar una etapa de softmax para estar en probabilidades.
+    at::Tensor tensor_result = module.forward(inputs).toTensor();
     
-    // ____________  //// confidence[0] = indice de la clase desde el torch max
-    // ____________  //// confidence[1] = probabilidad desde softmax[confidence[0]]
+    torch::Tensor tensor_zeros = torch::zeros({1000});//({3,244,244});
+	torch::Tensor tensor_ones = torch::ones({1000});//({3,244,244});
+	//torch::Tensor tensor_result = torch::rand({1000});//{3,244,244});
+	torch::Tensor tensor_softmax = at::softmax(tensor_result,0);
+	torch::Tensor tensor_max_value = torch::max(tensor_softmax);
+	float max_value = tensor_max_value.item<float>();
+	torch::Tensor tensor_index = torch::nonzero(torch::where(tensor_softmax==tensor_max_value,tensor_ones,tensor_zeros));
+	float index_long = tensor_index[0][0].item<float>()
+	//long index_long = tensor_index[0][0].item<long>();
+
+    confidence[0] = index_long//indice de la clase desde el torch max 
+    confidence[1] = max_value//probabilidad desde softmax[confidence[0]]
+    //Aqui tenemos un problema y es que la probabilidad es un float pero el indice es un long
+    //probablemente lo mas facil es volver el indice un float para pasaarlo 
   }
   else
   {
