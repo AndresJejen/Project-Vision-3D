@@ -1470,7 +1470,7 @@ void pcl::people::PersonCluster<PointT>::drawTBoundingBoxObject (pcl::visualizat
   viewer.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 2, bbox_name.str());
 
        std::stringstream confid;
-       confid << person_confidence_[1] << classList_[person_confidence_[0]];
+       confid << person_confidence_[1] << classList_[static_cast<long>(person_confidence_[0])];
        PointT position;
        position.x = tcenter_[0]- 0.2;
        position.y = ttop_[1];
