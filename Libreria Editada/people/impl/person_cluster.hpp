@@ -1371,6 +1371,12 @@ float pcl::people::PersonCluster<PointT>::getPersonConfidence ()
 }
 
 template <typename PointT>
+float *pcl::people::PersonCluster<PointT>::getObjectConfidence ()
+{
+  return (object_confidence_);
+}
+
+template <typename PointT>
 void pcl::people::PersonCluster<PointT>::setPersonConfidence (float confidence)
 {
   person_confidence_ = confidence;
@@ -1463,19 +1469,21 @@ void pcl::people::PersonCluster<PointT>::drawTBoundingBoxObject (pcl::visualizat
   }
 
   std::stringstream bbox_name;
-  bbox_name << "bbox_person_" << person_number;
+  bbox_name << "bbox_person_" << object_number;
   viewer.removeShape (bbox_name.str());
   viewer.addCube (coeffs, bbox_name.str());
   viewer.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_COLOR, 0.0, 1.0, 0.0, bbox_name.str());
   viewer.setShapeRenderingProperties (pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 2, bbox_name.str());
 
-       std::stringstream confid;
-       confid << person_confidence_[1] << classList_[person_confidence_[0]];
-       PointT position;
-       position.x = tcenter_[0]- 0.2;
-       position.y = ttop_[1];
-       position.z = tcenter_[2];
-       viewer.addText3D(, position, 0.1);
+	//    float con1 = person_confidence_[1];
+	//    float con2 = classList_[person_confidence_[0]];
+    //    std::ostringstream confid;
+    //    confid << con1 << " " << con2;
+    //    PointT position;
+    //    position.x = tcenter_[0]- 0.2;
+    //    position.y = ttop_[1];
+    //    position.z = tcenter_[2];
+    //    viewer.addText3D(confid.str(), position, 0.1);
 
       //  std::stringstream classObject;
       //  classObject << classList_[person_confidence_[0]];

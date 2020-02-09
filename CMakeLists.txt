@@ -1,22 +1,17 @@
-// cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-// cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+project(peopleClassifier)
 
-
-project(main_ground_based_people_detection)
-find_package(PCL 1.2 REQUIRED)
+find_package(PCL 1.7 REQUIRED)
 find_package(Torch REQUIRED)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+set(CMAKE_CXX_STANDARD 11)
 
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-// set(CMAKE_CXX_STANDARD 14)
-// set_property(TARGET example-app PROPERTY CXX_STANDARD 11)
-// set(CMAKE_CXX_STANDARD_REQUIRED ON)
-// set(CMAKE_CXX_EXTENSIONS OFF)
-
-add_executable (main_ground_based_people_detection main_ground_based_people_detection.cpp)
-// target_link_libraries (main_ground_based_people_detection ${PCL_LIBRARIES} "${TORCH_LIBRARIES}")
-
-
-
+add_executable (peopleClassifier MACOSX_BUNDLE peopleClassifier.cpp)
+target_link_libraries (peopleClassifier ${PCL_LIBRARIES})
+target_link_libraries(peopleClassifier "${TORCH_LIBRARIES}")
+set_property(TARGET peopleClassifier PROPERTY CXX_STANDARD 14)

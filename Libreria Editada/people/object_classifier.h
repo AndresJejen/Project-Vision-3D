@@ -86,15 +86,6 @@ namespace pcl
       /** \brief Destructor. */
       virtual ~ObjectClassifier ();
 
-      /** \brief Load SVM parameters from a text file. 
-       *
-       * \param[in] svm_filename Filename containing SVM parameters.
-       * 
-       * \return true if SVM has been correctly set, false otherwise.
-       */
-      bool
-      loadSVMFromFile (std::string svm_filename);
-
      /** \brief Load Pytorch Classifier from a .pt file
        *
        * \param[in] classifier_filename Filename containing Pytorch Script .pt file.
@@ -102,29 +93,7 @@ namespace pcl
        * \return true if Classifier has been correctly set, false otherwise.
        */
       bool
-      loadPytorchClassifier (str::string classifier_filename)
-
-      /**
-       * \brief Set trained SVM for object confidence estimation.
-       * 
-       * \param[in] window_height Detection window height.
-       * \param[in] window_width Detection window width.
-       * \param[in] SVM_weights SVM weights vector.
-       * \param[in] SVM_offset SVM offset.
-       */
-      void
-      setSVM (int window_height, int window_width, std::vector<float> SVM_weights, float SVM_offset);
-
-      /**
-       * \brief Get trained SVM for object confidence estimation.
-       * 
-       * \param[out] window_height Detection window height.
-       * \param[out] window_width Detection window width.
-       * \param[out] SVM_weights SVM weights vector.
-       * \param[out] SVM_offset SVM offset.
-       */
-      void
-      getSVM (int& window_height, int& window_width, std::vector<float>& SVM_weights, float& SVM_offset);
+      loadPytorchClassifier (std::string classifier_filename);
 
       /**
        * \brief Resize an image represented by a pointcloud containing RGB information.
@@ -161,7 +130,7 @@ namespace pcl
        * \param[in] image The whole image (pointer to a point cloud containing RGB information) containing the object to classify.
        * \return The classification score given by the SVM.
        */
-      double
+      float
       evaluate (float height, float xc, float yc, PointCloudPtr& image);
 
       /**

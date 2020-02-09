@@ -284,6 +284,13 @@ namespace pcl
       getPersonConfidence ();
 
       /**
+       * \brief Returns the HOG confidence.
+       * \return the HOG confidence.
+       */
+      float
+      *getObjectConfidence ();
+
+      /**
        * \brief Returns the number of points of the cluster.
        * \return the number of points of the cluster.
        */

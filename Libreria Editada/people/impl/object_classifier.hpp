@@ -50,7 +50,7 @@ template <typename PointT>
 pcl::people::ObjectClassifier<PointT>::~ObjectClassifier () {}
 
 template <typename PointT> bool
-pcl::people::ObjectClassifier<PointT>::loadPytorchClassifier (str::string classifier_filename)
+pcl::people::ObjectClassifier<PointT>::loadPytorchClassifier (std::string classifier_filename)
 {
   try {
     // Deserialize the ScriptModule from a file using torch::jit::load().
@@ -169,7 +169,7 @@ pcl::people::ObjectClassifier<PointT>::copyMakeBorder (PointCloudPtr& input_imag
   }
 }
 
-template <typename PointT> float[]
+template <typename PointT> float
 pcl::people::ObjectClassifier<PointT>::evaluate (float height_person,
               float xc,
               float yc,
@@ -179,7 +179,7 @@ pcl::people::ObjectClassifier<PointT>::evaluate (float height_person,
   int width = floor((height_person * window_width_) / (0.75 * window_height_) + 0.5);
   int xmin = floor(xc - width / 2 + 0.5);
   int ymin = floor(yc - height / 2 + 0.5);
-  float confidence = new float[2];
+  float confidence[2] = {0,0};
 
   if (height > 0)
   {
@@ -228,7 +228,21 @@ pcl::people::ObjectClassifier<PointT>::evaluate (float height_person,
     inputs.push_back(f);
 
     // Execute the model and turn its output into a tensor.
-    at::Tensor output = module.forward(inputs).toTensor();
+
+    torch::Tensor tensor_zeros = torch::zeros({1000});//({3,244,244});
+    torch::Tensor tensor_ones = torch::ones({1000});//({3,244,244});
+
+    torch::Tensor output = module.forward(inputs).toTensor();
+    torch::Tensor tensor_softmax = at::softmax(output,0);
+    torch::Tensor tensor_max_value = torch::max(tensor_softmax);
+
+    float max_value = tensor_max_value.item<float>();
+    torch::Tensor tensor_index = torch::nonzero(torch::where(tensor_softmax==tensor_max_value,tensor_ones,tensor_zeros));
+    long index_long = tensor_index[0][0].item<long>();
+    // std::string clase = clases[index_long];
+    std::cout << max_value << std::endl;
+    std::cout << index_long << std::endl;
+    // std::cout << clase << std::endl;	
 
     // aCA sOFTMAX first
 
@@ -238,14 +252,11 @@ pcl::people::ObjectClassifier<PointT>::evaluate (float height_person,
 
     // Falta Ver que clases corresponden y encontrar el valor mayor - luego de eso ese es el que escogemos como confidencia
     // Se podria agregar una etapa de softmax para estar en probabilidades.
-    
+    confidence[0] = index_long;
+    confidence[1] = max_value;
     // ____________  //// confidence[0] = indice de la clase desde el torch max
     // ____________  //// confidence[1] = probabilidad desde softmax[confidence[0]]
   }
-  else
-  {
-    confidence = std::numeric_limits<double>::quiet_NaN();
-  } 
 
   return confidence;
 }

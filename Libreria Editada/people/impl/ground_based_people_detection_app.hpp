@@ -416,11 +416,11 @@ pcl::people::GroundBasedPeopleDetectionApp<PointT>::compute (std::vector<pcl::pe
     top /= top(2);
     Eigen::Vector3f bottom = intrinsics_matrix_transformed_ * (it->getTBottom());
     bottom /= bottom(2);
-    if (person_classifier_set_flag_ === true)
+    if (person_classifier_set_flag_ == true)
     {
 	    it->setPersonConfidence(person_classifier_.evaluate(rgb_image_, bottom, top, centroid, vertical_));
     }
-    if (object_classifier_set_flag_ === true)
+    if (object_classifier_set_flag_ == true)
     {
 	    it->setObjectConfidence(object_classifier_.evaluate(rgb_image_, bottom, top, centroid, vertical_));
     }

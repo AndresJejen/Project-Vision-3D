@@ -1007,7 +1007,7 @@ int main()
 		
 	torch::Tensor tensor_zeros = torch::zeros({1000});//({3,244,244});
 	torch::Tensor tensor_ones = torch::ones({1000});//({3,244,244});
-	torch::Tensor tensor_result = torch::rand({1000});//{3,244,244});
+	torch::Tensor tensor_result = torch::rand({1000});
 	torch::Tensor tensor_softmax = at::softmax(tensor_result,0);
 	torch::Tensor tensor_max_value = torch::max(tensor_softmax);
 	float max_value = tensor_max_value.item<float>();

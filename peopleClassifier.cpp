@@ -7,31 +7,16 @@
 #include <pcl/sample_consensus/sac_model_plane.h>   // Estimador del plano (Suelo)
 #include <pcl/common/time.h>    // Tiempo
 
-#include "./libraries/ground_based_object_detection.h"   // Libreria para encontrar personas
-#include "./libraries/person_cluster.h"
-
-#include "./libraries/ground_based_object_detection.h"   // Libreria para encontrar personas
-#include "./libraries/person_cluster.h"
-
-
-#include<mutex>
-#include<thread>
-#include<iostream>
-
-using namespace std::literals::chrono_literals;
+#include <pcl/people/ground_based_people_detection_app.h>
 
 typedef pcl::PointXYZRGBA PointT;
 typedef pcl::PointCloud<PointT> PointCloudT;
-
-PointCloudT::Ptr cloud (new PointCloudT)
-bool new_cloud_available_flag = false;
-
 
 // PCL viewer //
 pcl::visualization::PCLVisualizer viewer("PCL Viewer");
 
 // Mutex: //
-std::mutex cloud_mutex;
+boost::mutex cloud_mutex;
 
 enum { COLS = 640, ROWS = 480 };
 
@@ -48,12 +33,12 @@ int print_help()
   return 0;
 }
 
-void
-grabberCallback(const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr& callback_cloud)
+void cloud_cb_ (const PointCloudT::ConstPtr &callback_cloud, PointCloudT::Ptr& cloud,
+    bool* new_cloud_available_flag)
 {
   cloud_mutex.lock ();    // for not overwriting the point cloud from another thread
   *cloud = *callback_cloud;
-  new_cloud_available_flag = true;
+  *new_cloud_available_flag = true;
   cloud_mutex.unlock ();
 }
 
@@ -102,20 +87,24 @@ int main (int argc, char** argv) {
 
     pcl::console::parse_argument (argc, argv, "--test_cloud", testcloud);
 
-    if (testcloud !== "") {
+    bool new_cloud_available_flag = false;
+    PointCloudT::Ptr cloud (new PointCloudT);
+
+    if (testcloud != "") {
       new_cloud_available_flag = true;
       // Código de leer PCD _____________________ ////////////////////////////////////////
       // * cloud = from PCD
     } else {
       // Read Kinect live stream:
       pcl::Grabber* interface = new pcl::OpenNIGrabber();
-      boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f = boost::bind(&grabberCallback, _1);
+      boost::function<void (const pcl::PointCloud<pcl::PointXYZRGBA>::ConstPtr&)> f =
+          boost::bind (&cloud_cb_, _1, cloud, &new_cloud_available_flag);
       interface->registerCallback (f);
       interface->start ();
 
       // Wait for the first frame:
       while(!new_cloud_available_flag) 
-          std::this_thread::sleep_for(1ms);
+          boost::this_thread::sleep(boost::posix_time::milliseconds(1));
       new_cloud_available_flag = false;
     }
 
